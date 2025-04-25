@@ -1,6 +1,7 @@
-#include "Structs.h"
+#include "ArvoreRn.h"
 
-NoRn *criaNoRn(int idCliente){
+NoRn *criaNoRn(int idCliente)
+{
     NoRn *aux = malloc(sizeof(NoRn));
     aux->esq = NULL;
     aux->dir = NULL;
@@ -10,41 +11,13 @@ NoRn *criaNoRn(int idCliente){
     return aux;
 }
 
-NoRn *buscaNo(int idCliente, NoRn *raiz){
-
-
-
+NoRn *buscaNo(int idCliente, NoRn *raiz)
+{
 }
 
-//FUNÇAÕ INSERÇÃO
-//FUNÇÃO REMOÇAO
-//FUNCAO PRINT (ALTERAR COR DE EXIBICAO: R/N)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// FUNÇAÕ INSERÇÃO
+// FUNÇÃO REMOÇAO
+// FUNCAO PRINT (ALTERAR COR DE EXIBICAO: R/N)
 
 int main()
 {
