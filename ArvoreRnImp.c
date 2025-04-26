@@ -13,14 +13,16 @@ NoRn *criaNoRn(int idCliente)
 
 NoRn *buscaNo(int idCliente, NoRn *raiz)
 {
+
 }
 
 // FUNÇAÕ INSERÇÃO
 // FUNÇÃO REMOÇAO
 // FUNCAO PRINT (ALTERAR COR DE EXIBICAO: R/N)
+//grafico em log N (relatorio)
 
 int main()
 {
-    /* code */
+    /* code */ 
     return 0;
 }
