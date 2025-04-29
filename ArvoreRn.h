@@ -16,6 +16,10 @@ typedef struct NoRn{
     struct NoRn *pai;
 }NoRn;
 
+typedef struct ArvoreRn{
+    NoRn * raiz;
+}ArvoreRn;
+
 
 //cabeçalhos das funcoes e comentarios
 
