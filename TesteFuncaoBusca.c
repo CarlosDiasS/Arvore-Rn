@@ -1,27 +1,12 @@
 #include "ArvoreRn.h"
 
-//nó sentinela global (nil, vou abreviar muito grande o nome) (acho que pode funcionar melhor do que botar um nó para cada arvóre)
-NoRn *NIL = NULL;
-
-//inicializa o nil
-NoRn *inicializarNil() {
-    if (NIL == NULL) {
-        NIL = (NoRn*)malloc(sizeof(NoRn));
-        NIL->cor = BLACK;
-        NIL->esq = NIL->dir = NIL->pai = NIL;
-        
-    }
-    return NIL;
-    //funcao ja existe na principal
-}
-
 //função que busca um nó na ARN (se Deus quiser tá certo)
 
 //verificar busca feita em lab(aeds2)
 
 NoRn *buscaNo(int idCliente, NoRn *raiz) {
     if(raiz != NULL){
-        NoRn *atual = raiz;
+        NoRn atual = raiz;
     }
     
     while (atual != NIL && idCliente != atual->idCliente) {
@@ -32,6 +17,8 @@ NoRn *buscaNo(int idCliente, NoRn *raiz) {
         }
     }
     
+//DPS FAZER UMA BUSCA RECURSIVA 
+
     return atual; //retorna o nó encontrado ou NIL se não encontrado (vulgo se deu merda)
 }
 
