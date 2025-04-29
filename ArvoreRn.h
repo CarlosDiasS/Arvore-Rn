@@ -17,7 +17,6 @@ typedef struct NoRn{
 }NoRn;
 
 
-
 //cabeçalhos das funcoes e comentarios
 
 

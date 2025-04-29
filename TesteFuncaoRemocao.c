@@ -1,15 +1,114 @@
-#include "ArvoreRn.h"
+#include <stdlib.h>
+#include <stdbool.h>
 
-void removerNoRn(int idCliente, NoRn *arvore)
-{
+typedef enum Cor{
+    BLACK,
+    RED
+}Cor;
 
-    NoRn *aux = buscaNo(idCliente, arvore);
+typedef struct NoRn{
+    int idCliente;
+    Cor cor;
+    struct NoRn *esq;
+    struct NoRn *dir;
+    struct NoRn *pai;
+}NoRn;
 
-    // usar antecessor
+typedef struct ArvoreRn{
+    NoRn *raiz;
+}ArvoreRn;
+
+//o no removido sempre sera o de menor valor, logo, 
+// o no mais a esquerda sem filhos
+
+
+NoRn *buscaNo(int n);
+
+bool isBalanceado(ArvoreRn *grafo);
+
+void balancearRn(ArvoreRn *grafo);
+
+NoRn *sucessor(NoRn *grafo, NoRn *No);
+
+NoRn *antecessor(NoRn *grafo, NoRn *No);
+
+//Rotacoes ja implementadas
+
+void TransplanteRn(ArvoreRn *grafo, NoRn *u, NoRn *z){
+    if(u->pai == NULL){
+        grafo->raiz = z;
+    }
+    else if(u == u->pai->esq){
+        u->pai->esq = z;
+    }
+    else{
+        u->pai->dir = z;
+    }
+    z->pai = u->pai;
 }
 
-int main()
-{
 
-    return 0;
+
+bool RemoverNoRn(NoRn *grafo,int idCliente){
+
+    NoRn *aux = buscaNo(idCliente);
+
+    //Caso 1, ambos os filhos nulos
+
+    if(!aux->esq && !aux->dir){
+
+        if(aux->idCliente>aux->pai->idCliente){
+            aux->pai->dir = NULL;
+            if(!isBalanceado(grafo)){
+                balancearRn(grafo);
+                printf("No %d removido.\n",idCliente);
+                return true;
+            }
+            
+        }
+        //a esquerda, sendo menor ou igual
+        else{
+            aux->pai->esq = NULL;
+            if(!isBalanceado(grafo)){
+                balancearRn(grafo);
+                printf("No %d removido.\n",idCliente);
+                return true;
+            }
+        }
+    }
+
+    //Caso 2.1, sem filhos a esquerda 
+
+    if(aux->esq == NULL && aux->dir !=NULL){
+
+        aux = aux->dir;
+        aux->dir = NULL;
+        if(!isBalanceado(grafo)){
+                balancearRn(grafo);
+                printf("No %d removido.\n",idCliente);
+                return true;
+            }
+    }
+
+    //Caso 2.2, sem filhos a direita 
+
+    if(aux->dir == NULL && aux->esq !=NULL){
+
+        aux = aux->esq;
+        aux->esq = NULL;
+        if(!isBalanceado(grafo)){
+                balancearRn(grafo);
+                printf("No %d removido.\n",idCliente);
+                return true;
+            }
+    }
+
+    //Casos 3.1,3.2,3.3,3.2,3.4
+
+    //Caso 3.1, slide 16-20
+
+
+
+
+
 }
