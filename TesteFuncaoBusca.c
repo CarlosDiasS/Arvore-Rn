@@ -4,7 +4,7 @@
 NoRn *NIL = NULL;
 
 //inicializa o nil
-void inicializarNil() {
+NoRn *inicializarNil() {
     if (NIL == NULL) {
         NIL = (NoRn*)malloc(sizeof(NoRn));
         NIL->cor = BLACK;
@@ -20,7 +20,9 @@ void inicializarNil() {
 //verificar busca feita em lab(aeds2)
 
 NoRn *buscaNo(int idCliente, NoRn *raiz) {
-    NoRn *atual = raiz;
+    if(raiz != NULL){
+        NoRn *atual = raiz;
+    }
     
     while (atual != NIL && idCliente != atual->idCliente) {
         if (idCliente < atual->idCliente) {
