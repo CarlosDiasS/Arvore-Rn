@@ -18,11 +18,31 @@ ArvoreRn *criaArvore(){
     return aux;
 }
 
-
-
 NoRn *buscaNo(int idCliente, NoRn *raiz)
 {
+    if (raiz != NULL)
+    {
+        NoRn *atual = raiz;
 
+        while (atual != NULL && idCliente != atual->idCliente)
+        {
+            if (idCliente < atual->idCliente)
+            {
+                atual = atual->esq;
+            }
+            else
+            {
+                atual = atual->dir;
+            }
+        }
+        if(atual !=NULL){
+           return atual; 
+        }
+        printf("Nó não encontrado.\n");
+        exit(1);
+    }
+    printf("arvore vazia.\n");
+    exit(1);
 }
 
 // FUNÇAÕ INSERÇÃO
@@ -41,6 +61,10 @@ int main()
     arvoreRn->raiz->esq->dir= criaNoRn(8);
     arvoreRn->raiz->dir->esq = criaNoRn(15);
     arvoreRn->raiz->dir->dir= criaNoRn(20);
+
+    NoRn *buscado = buscaNo(0,arvoreRn->raiz);
+    printf("idCliente %d achado.\n", buscado->idCliente);
+
 
     return 0;
 }

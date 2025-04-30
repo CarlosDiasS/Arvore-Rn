@@ -21,7 +21,7 @@ NoRn *buscaNo(int idCliente, NoRn *raiz)
                 atual = atual->dir;
             }
         }
-        return atual;
+        return (atual);
     }
 
     // DPS FAZER UMA BUSCA RECURSIVA
@@ -58,12 +58,13 @@ NoRn *criaNoRn(int idCliente)
     aux->dir = NULL;
     aux->pai = NULL;
     aux->idCliente = idCliente;
-    //talvez uma condicional para a raiz
+    // talvez uma condicional para a raiz
     aux->cor = RED;
     return aux;
 }
 
-ArvoreRn *criaArvore(){
+ArvoreRn *criaArvore()
+{
     ArvoreRn *aux = malloc(sizeof(ArvoreRn));
     aux->raiz = NULL;
     return aux;
@@ -71,19 +72,20 @@ ArvoreRn *criaArvore(){
 
 int main()
 {
-    //teste
+    // teste
     ArvoreRn *arvoreRn = criaArvore();
     arvoreRn->raiz = criaNoRn(12);
     arvoreRn->raiz->esq = criaNoRn(6);
     arvoreRn->raiz->dir = criaNoRn(18);
     arvoreRn->raiz->esq->esq = criaNoRn(3);
-    arvoreRn->raiz->esq->dir= criaNoRn(8);
+    arvoreRn->raiz->esq->dir = criaNoRn(8);
     arvoreRn->raiz->dir->esq = criaNoRn(15);
-    arvoreRn->raiz->dir->dir= criaNoRn(20);
+    arvoreRn->raiz->dir->dir = criaNoRn(20);
 
-    NoRn *buscado = buscaNo(3,arvoreRn->raiz);
+    NoRn *buscado = buscaNo(3, arvoreRn->raiz);
     printf("idCliente %d achado.\n", buscado->idCliente);
-    if(clienteNaFila(15,arvoreRn->raiz)){
+    if (clienteNaFila(15, arvoreRn->raiz))
+    {
         printf("cliente na fila.\n");
     }
 
