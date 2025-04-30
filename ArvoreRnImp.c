@@ -45,6 +45,42 @@ NoRn *buscaNo(int idCliente, NoRn *raiz)
     exit(1);
 }
 
+void RR(NoRn *no)
+{
+    NoRn *aux;
+    no->esq = aux;
+    aux->dir->pai = no;
+    no->esq = aux->dir;
+    aux->dir = no;
+    aux->pai = no->pai;
+    no->pai = aux;
+    no = aux; //para continuar subindo em uma recursão
+}
+
+
+void LL(NoRn *no)
+{
+    NoRn *aux;
+    no->dir = aux;
+    aux->esq->pai = no;
+    no->dir = aux->esq;
+    aux->esq = no;
+    aux->pai = no->pai;
+    no->pai = aux;
+    no = aux;
+}
+
+void RL(NoRn *no){
+    RR(no->dir);
+    LL(no);
+}
+
+void LR(NoRn *no){
+    LL(no->esq);
+    RR(no);
+}
+
+
 // FUNÇAÕ INSERÇÃO
 // FUNÇÃO REMOÇAO
 // FUNCAO PRINT (ALTERAR COR DE EXIBICAO: R/N)
@@ -62,7 +98,7 @@ int main()
     arvoreRn->raiz->dir->esq = criaNoRn(15);
     arvoreRn->raiz->dir->dir= criaNoRn(20);
 
-    NoRn *buscado = buscaNo(0,arvoreRn->raiz);
+    NoRn *buscado = buscaNo(20,arvoreRn->raiz);
     printf("idCliente %d achado.\n", buscado->idCliente);
 
 

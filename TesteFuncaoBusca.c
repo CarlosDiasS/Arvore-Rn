@@ -24,8 +24,6 @@ NoRn *buscaNo(int idCliente, NoRn *raiz)
         return (atual);
     }
 
-    // DPS FAZER UMA BUSCA RECURSIVA
-
     // retorna o nó encontrado ou NIL se não encontrado (vulgo se deu merda)
 }
 

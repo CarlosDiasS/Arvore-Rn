@@ -28,5 +28,5 @@ NoRn *buscaNo(int idCliente, NoRn *raiz);
 
 
 
-void removerNoRn(int idCliente, NoRn *arvore);
+void removerNoRn(int idCliente, NoRn *raiz);
 
