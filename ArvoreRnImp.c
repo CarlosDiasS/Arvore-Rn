@@ -18,6 +18,12 @@ ArvoreRn *criaArvore(){
     return aux;
 }
 
+FilaAtendimento *criaFila(){
+    FilaAtendimento *aux = malloc(sizeof(FilaAtendimento));
+    aux->totalAtendimentos = 0;
+    return aux;
+}
+
 NoRn *buscaNo(int idCliente, NoRn *raiz)
 {
     if (raiz != NULL)
@@ -86,6 +92,60 @@ void LR(NoRn *no){
 // FUNCAO PRINT (ALTERAR COR DE EXIBICAO: R/N)
 //grafico em log N (relatorio)
 
+
+/*
+    a fila de atendimento ira armazenar os inputs
+    caso seja -1, chamar a remocao(que ira remover o idCliente de menor valor)
+    demais valores serao adicionado a arvore
+    ao final, a funcao impressao ira imprimir a arvore resultante(que contem os clientes que ainda nao foram atendidos)
+
+    -> uma funcao handleInput da vida, que ira analisar as entradas(x1,x2,x3...): 
+
+    while fim dos inputs
+
+    x = -1: remover no com menor idCliente(naturalmente, no na extrema esquerda da arvore)
+    x >= 0: adicionar a arvore Rn
+
+    -> imprimir arvore resultante no formato: 
+
+    41 BLACK
+    34 RED
+    25 BLACK
+    32 RED
+    36 BLACK
+    43 BLACK
+    49 RED
+
+    -> funcao para limpar todas as alocações de memoria
+
+*/
+
+void imprimirGrafo(ArvoreRn *grafo);
+
+bool inserirNoRn( int idCliente,ArvoreRn *grafo);
+
+ArvoreRn *tratarInputDados(FilaAtendimento *fila){
+
+    int totalEntradas = sizeof(fila->vetor)/sizeof(int); // ou entao receber por parametro
+    fila->totalAtendimentos = totalEntradas;
+    ArvoreRn *grafo = criaArvore();
+
+    for(int i=0;i<totalEntradas;i++){
+
+        if(fila->vetor[i] != -1){
+            inserirNoRn(fila->vetor[i],grafo);
+            //testar com printf aqui
+        }
+        else{
+            removerNoRn(fila->vetor[i],grafo);
+             //testar com printf aqui
+        }
+    }
+    return grafo;
+}
+
+
+
 int main()
 {
     //teste
@@ -100,6 +160,17 @@ int main()
 
     NoRn *buscado = buscaNo(20,arvoreRn->raiz);
     printf("idCliente %d achado.\n", buscado->idCliente);
+
+    //main ofc:
+
+
+    //input e tratamento de dados
+    FilaAtendimento *fila = criaFila();
+
+    //um for para popular a fila(scanf)
+
+    ArvoreRn *grafo = tratarInputDados(fila);
+    imprimirGrafo(grafo);
 
 
     return 0;

@@ -20,6 +20,11 @@ typedef struct ArvoreRn{
     NoRn * raiz;
 }ArvoreRn;
 
+typedef struct FilaAtendimento{
+    int *vetor;
+    int totalAtendimentos;
+}FilaAtendimento;
+
 
 //cabeçalhos das funcoes e comentarios
 

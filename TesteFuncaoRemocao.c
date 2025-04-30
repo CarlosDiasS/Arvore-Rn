@@ -18,21 +18,77 @@ typedef struct ArvoreRn{
     NoRn *raiz;
 }ArvoreRn;
 
-//o no removido sempre sera o de menor valor, logo, 
-// o no mais a esquerda sem filhos
-
-
-NoRn *buscaNo(int n);
-
 bool isBalanceado(ArvoreRn *grafo);
 
 void balancearRn(ArvoreRn *grafo);
 
-NoRn *sucessor(NoRn *grafo, NoRn *No);
+NoRn *menorNo(ArvoreRn *grafo){
 
-NoRn *antecessor(NoRn *grafo, NoRn *No);
+    NoRn *aux = grafo->raiz;
+    if(aux !=NULL){
+        while(aux->esq != NULL){
+            aux = aux->esq;
+        }
+        return aux;
+    }
+}
+
+NoRn *sucessor(ArvoreRn *grafo, NoRn *No){
+
+    NoRn *aux = grafo->raiz;
+    aux = aux->dir;
+    while(aux->esq != NULL){
+        aux = aux->esq;
+    }
+    return aux;
+}
+
+NoRn *antecessor(ArvoreRn *grafo, NoRn *No){
+
+    NoRn *aux = grafo->raiz;
+    aux = aux->esq;
+    while(aux->dir != NULL){
+        aux = aux->dir;
+    }
+    return aux;
+}
 
 //Rotacoes ja implementadas
+
+void RR(NoRn *no)
+{
+    NoRn *aux;
+    no->esq = aux;
+    aux->dir->pai = no;
+    no->esq = aux->dir;
+    aux->dir = no;
+    aux->pai = no->pai;
+    no->pai = aux;
+    no = aux; //para continuar subindo em uma recursão
+}
+
+void LL(NoRn *no)
+{
+    NoRn *aux;
+    no->dir = aux;
+    aux->esq->pai = no;
+    no->dir = aux->esq;
+    aux->esq = no;
+    aux->pai = no->pai;
+    no->pai = aux;
+    no = aux;
+}
+
+void RL(NoRn *no){
+    RR(no->dir);
+    LL(no);
+}
+
+void LR(NoRn *no){
+    LL(no->esq);
+    RR(no);
+}
+
 
 void TransplanteRn(ArvoreRn *grafo, NoRn *u, NoRn *z){
     if(u->pai == NULL){
@@ -47,11 +103,43 @@ void TransplanteRn(ArvoreRn *grafo, NoRn *u, NoRn *z){
     z->pai = u->pai;
 }
 
+ArvoreRn *criaArvore(){
+    ArvoreRn *aux = malloc(sizeof(ArvoreRn));
+    aux->raiz = NULL;
+    return aux;
+}
 
+NoRn *buscaNo(int idCliente, NoRn *raiz)
+{
+    if (raiz != NULL)
+    {
+        NoRn *atual = raiz;
 
-bool RemoverNoRn(NoRn *grafo,int idCliente){
+        while (atual != NULL && idCliente != atual->idCliente)
+        {
+            if (idCliente < atual->idCliente)
+            {
+                atual = atual->esq;
+            }
+            else
+            {
+                atual = atual->dir;
+            }
+        }
+        if(atual !=NULL){
+           return atual; 
+        }
+        printf("Nó não encontrado.\n");
+        exit(1);
+    }
+    printf("arvore vazia.\n");
+    exit(1);
+}
 
-    NoRn *aux = buscaNo(idCliente);
+bool RemoverNoRn(ArvoreRn *grafo,int idCliente){
+
+    NoRn *aux = buscaNo(idCliente, grafo->raiz);
+    //tratamento de erro na funcao buscaNo( caso nao encontrado)
 
     //Caso 1, ambos os filhos nulos
 
@@ -111,4 +199,25 @@ bool RemoverNoRn(NoRn *grafo,int idCliente){
 
 
 
+}
+
+
+int main()
+{
+    // teste arvore mock
+    ArvoreRn *arvoreRn = criaArvore();
+    arvoreRn->raiz = criaNoRn(12);
+    arvoreRn->raiz->esq = criaNoRn(6);
+    arvoreRn->raiz->dir = criaNoRn(18);
+    arvoreRn->raiz->esq->esq = criaNoRn(3);
+    arvoreRn->raiz->esq->dir = criaNoRn(8);
+    arvoreRn->raiz->dir->esq = criaNoRn(15);
+    arvoreRn->raiz->dir->dir = criaNoRn(20);
+
+
+
+
+
+
+    return 0;
 }
