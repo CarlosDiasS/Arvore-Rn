@@ -42,14 +42,22 @@ NoRn *menorNo(ArvoreRn *grafo)
 
 NoRn *antecessor(ArvoreRn *grafo, NoRn *No)
 {
+    if (No == NULL)
+    {
+        return NULL;
+    }
 
-   
+    if (No->esq != NULL)
+    {
+        NoRn *aux = No->esq;
 
-
-
-
-
-   
+        while (aux->dir != NULL)
+        {
+            aux = aux->dir;
+        }
+        return aux;
+    }
+    return No;
 }
 
 void RR(NoRn *no)
@@ -90,6 +98,7 @@ void LR(NoRn *no)
 
 void TransplanteRn(ArvoreRn *grafo, NoRn *u, NoRn *z)
 {
+    printf("transplante\n");
     if (u->pai == NULL)
     {
         grafo->raiz = z;
@@ -133,19 +142,19 @@ bool RemoverNoRn(ArvoreRn *grafo, int idCliente)
 
     NoRn *aux = buscaNo(idCliente, grafo->raiz);
     printf("ok\n");
-    if (aux == NULL)
+    if (aux == NULL || grafo == NULL || grafo->raiz == NULL)
     {
         return false;
     }
     printf("no : %d\n", aux->idCliente);
-    // tratamento de erro na funcao buscaNo( caso nao encontrado)
+
+    NoRn *noAntecessor = antecessor(grafo, aux);
 
     // caso 0 raiz
-
     if (aux->pai == NULL)
     {
         grafo->raiz = NULL;
-        printf("Arvore vazia.\n");
+        printf("Arvore esvaziada.\n");
         return true;
     }
 
@@ -204,34 +213,26 @@ bool RemoverNoRn(ArvoreRn *grafo, int idCliente)
     if (aux->esq != NULL && aux->dir != NULL)
     {
         printf("caso 3: \n");
-        NoRn *noAntecessor = antecessor(grafo, aux);
-        printf("%d", noAntecessor->idCliente);
-        printf("ok\n");
+
+        printf("ok1\n");
 
         // filho a esq do antecessor
         NoRn *x = noAntecessor->esq;
-        printf("ok\n");
+        printf("ok2\n");
 
         // tio de x(irmao do antecessor)
         NoRn *w = NULL;
-        if (x != NULL && x->pai != NULL && x->pai->pai != NULL)
+        if (x != NULL)
         {
-            if (x->pai == x->pai->pai->esq)
-            {
-                w = x->pai->pai->dir;
-            }
-            else
-            {
-                w = x->pai->pai->esq;
-            }
-        }
-        printf("ok");
+            w = x->pai->pai->esq;
+        };
+        printf("ok3\n");
         // recortar o antecessor e substituir aux pelo antecessor
 
         TransplanteRn(grafo, aux, noAntecessor);
-
+        printf("ok4\n");
         // Caso 3.1
-        if (w && w->cor == RED)
+        if (w != NULL && w->cor == RED)
         {
             printf("caso 3.1: \n");
             printf("No %d removido.\n", idCliente);
@@ -250,6 +251,8 @@ bool RemoverNoRn(ArvoreRn *grafo, int idCliente)
         {
             // retirar um preto de x e de w
             printf("terminar");
+
+            // maldito duplo preto
         }
 
         // Caso 3.3
@@ -288,6 +291,14 @@ bool RemoverNoRn(ArvoreRn *grafo, int idCliente)
     }
 
     // Caso 4
+    if (aux->cor == RED && noAntecessor->cor == BLACK)
+    {
+
+        // filho a esq do antecessor
+        NoRn *x = noAntecessor->esq;
+        x->cor = RED;
+        RemoverNoRn(grafo, idCliente);
+    }
 }
 
 int main()
@@ -322,8 +333,8 @@ int main()
     arvoreRn->raiz->esq->esq->dir->pai = arvoreRn->raiz->esq->esq;
 
     printf("ok\n");
-    printf("ant 6: %d", antecessor(arvoreRn,arvoreRn->raiz->esq )->idCliente);
-    //RemoverNoRn(arvoreRn, 6);
+    printf("ant 6: %d", antecessor(arvoreRn, arvoreRn->raiz->esq)->idCliente);
+    RemoverNoRn(arvoreRn, 6);
 
     return 0;
 }
