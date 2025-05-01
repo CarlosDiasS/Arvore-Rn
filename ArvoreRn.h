@@ -6,6 +6,7 @@
 typedef enum {
     BLACK,
     RED,
+    DOUBLEBLACK,
 } Cor;
 
 typedef struct NoRn{
