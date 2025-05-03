@@ -353,7 +353,7 @@ bool RemoverNoRn(ArvoreRn *grafo, int idCliente)
         return true;
     }
 
-    // Caso 3, utilizando o no antecessor
+    // Caso 3, utilizando o no antecessor OK
 
     if (aux->esq != NULL && aux->dir != NULL)
     {
