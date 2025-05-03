@@ -118,7 +118,7 @@ bool clienteNaFila(int idCliente, NoRn *raiz)
 }
 
 // anisio
-void ajustarInsercao(NoRn *novoNo, ArvoreRn *arvore)
+bool ajustarInsercao(NoRn *novoNo, ArvoreRn *arvore)
 {
     NoRn *tio = NULL;
 
@@ -130,24 +130,30 @@ void ajustarInsercao(NoRn *novoNo, ArvoreRn *arvore)
 
             if (tio->cor == RED)
             {
-                // caso 1:tio vermelho
+                // caso 1:tio vermelho Ok
+                printf("caso1");
                 novoNo->pai->cor = BLACK;
                 tio->cor = BLACK;
                 novoNo->pai->pai->cor = RED;
                 novoNo = novoNo->pai->pai;
+                return true;
             }
             else
             {
                 // caso 2:tio preto
                 if (novoNo == novoNo->pai->dir)
                 {
+                    printf("MAMACO");
                     novoNo = novoNo->pai;
                     LL(arvore, novoNo);
+                    return true;
                 }
-                // caso 3
+                // caso 3 OK
+                printf("caso3");
                 novoNo->pai->cor = BLACK;
                 novoNo->pai->pai->cor = RED;
                 RR(arvore, novoNo->pai->pai);
+                return true;
             }
         }
         else
@@ -276,13 +282,27 @@ int main()
     arvoreRn->raiz->esq->esq->dir->cor = RED;
     arvoreRn->raiz->esq->esq->dir->pai = arvoreRn->raiz->esq->esq; // Ponteiro para o pai
 
-    arvoreRn->raiz->dir->dir = criaNoRn(20);
-    arvoreRn->raiz->dir->dir->cor = RED;
-    arvoreRn->raiz->dir->dir->pai = arvoreRn->raiz->dir; // Ponteiro para o pai
+    // arvoreRn->raiz->dir->dir = criaNoRn(20);
+    // arvoreRn->raiz->dir->dir->cor = RED;
+    // arvoreRn->raiz->dir->dir->pai = arvoreRn->raiz->dir; // Ponteiro para o pai
 
     arvoreRn->raiz->dir->esq = criaNoRn(15);
     arvoreRn->raiz->dir->esq->cor = RED;
     arvoreRn->raiz->dir->esq->pai = arvoreRn->raiz->dir; // Ponteiro para o pai
+
+    // arvoreRn->raiz->esq->esq->dir->esq = criaNoRn(4);
+    inserirNo(4, arvoreRn);
+
+    printf("RAIZ: %d\n", arvoreRn->raiz->idCliente);
+
+    inserirNo(19, arvoreRn);
+
+    //  printf("RAIZ: %d",arvoreRn->raiz->idCliente);
+    //  inserirNo(20,arvoreRn);
+
+    imprimirPreOrdem(arvoreRn->raiz);
+
+    //ARRUMAR INSERCAO (NA RAIZ E CASO 2,3)
 
     return 0;
 }
