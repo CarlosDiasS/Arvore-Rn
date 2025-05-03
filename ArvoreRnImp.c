@@ -148,21 +148,7 @@ ArvoreRn *tratarInputDados(FilaAtendimento *fila){
 
 int main()
 {
-    //teste
-    ArvoreRn *arvoreRn = criaArvore();
-    arvoreRn->raiz = criaNoRn(12);
-    arvoreRn->raiz->esq = criaNoRn(6);
-    arvoreRn->raiz->dir = criaNoRn(18);
-    arvoreRn->raiz->esq->esq = criaNoRn(3);
-    arvoreRn->raiz->esq->dir= criaNoRn(8);
-    arvoreRn->raiz->dir->esq = criaNoRn(15);
-    arvoreRn->raiz->dir->dir= criaNoRn(20);
-
-    NoRn *buscado = buscaNo(20,arvoreRn->raiz);
-    printf("idCliente %d achado.\n", buscado->idCliente);
-
     //main ofc:
-
 
     //input e tratamento de dados
     FilaAtendimento *fila = criaFila();
