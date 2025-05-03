@@ -7,7 +7,7 @@ NoRn *criaNoRn(int idCliente)
     aux->dir = NULL;
     aux->pai = NULL;
     aux->idCliente = idCliente;
-    //talvez uma condicional para a raiz
+    // talvez uma condicional para a raiz
     aux->cor = RED;
     return aux;
 }
@@ -117,98 +117,123 @@ bool clienteNaFila(int idCliente, NoRn *raiz)
     // ternario
 }
 
-
-//anisio
-void ajustarInsercao(NoRn *novoNo, ArvoreRn *arvore) {
+// anisio
+void ajustarInsercao(NoRn *novoNo, ArvoreRn *arvore)
+{
     NoRn *tio = NULL;
-    
-    while (novoNo->pai->cor == RED) {
-        if (novoNo->pai == novoNo->pai->pai->esq) {
+
+    while (novoNo->pai->cor == RED)
+    {
+        if (novoNo->pai == novoNo->pai->pai->esq)
+        {
             tio = novoNo->pai->pai->dir;
-            
-            if (tio->cor == RED) {
-                //caso 1:tio vermelho
+
+            if (tio->cor == RED)
+            {
+                // caso 1:tio vermelho
                 novoNo->pai->cor = BLACK;
                 tio->cor = BLACK;
                 novoNo->pai->pai->cor = RED;
                 novoNo = novoNo->pai->pai;
-            } else {
-                //caso 2:tio preto
-                if (novoNo == novoNo->pai->dir) {
-                    novoNo = novoNo->pai;
-                    LL(novoNo);
-                }
-                //caso 3
-                novoNo->pai->cor = BLACK;
-                novoNo->pai->pai->cor = RED;
-                RR(novoNo->pai->pai);
             }
-        } else {
-            //espelho dos casos anteriores
+            else
+            {
+                // caso 2:tio preto
+                if (novoNo == novoNo->pai->dir)
+                {
+                    novoNo = novoNo->pai;
+                    LL(arvore, novoNo);
+                }
+                // caso 3
+                novoNo->pai->cor = BLACK;
+                novoNo->pai->pai->cor = RED;
+                RR(arvore, novoNo->pai->pai);
+            }
+        }
+        else
+        {
+            // espelho dos casos anteriores
             tio = novoNo->pai->pai->esq;
-            
-            if (tio->cor == RED) {
+
+            if (tio->cor == RED)
+            {
                 novoNo->pai->cor = BLACK;
                 tio->cor = BLACK;
                 novoNo->pai->pai->cor = RED;
                 novoNo = novoNo->pai->pai;
-            } else {
-                if (novoNo == novoNo->pai->esq) {
+            }
+            else
+            {
+                if (novoNo == novoNo->pai->esq)
+                {
                     novoNo = novoNo->pai;
-                    RR(novoNo);
+                    RR(arvore, novoNo);
                 }
                 novoNo->pai->cor = BLACK;
                 novoNo->pai->pai->cor = RED;
-                LL(novoNo->pai->pai);
+                LL(arvore, novoNo->pai->pai);
             }
         }
     }
-    
-    arvore->raiz->cor = BLACK;//a raiz é sempre preta (se por acaso ela ficar vermelha é pra mudar a cor dos filhos)
+
+    arvore->raiz->cor = BLACK; // a raiz é sempre preta (se por acaso ela ficar vermelha é pra mudar a cor dos filhos)
 }
 
-//função de inserção
-bool inserirNo(int idCliente, ArvoreRn *arvore) {
+// função de inserção
+bool inserirNo(int idCliente, ArvoreRn *arvore)
+{
     NoRn *novoNo = criaNoRn(idCliente);
-        if (novoNo == NULL)
-            return false;
+    if (novoNo == NULL)
+        return false;
     NoRn *y = NULL;
     NoRn *x = arvore->raiz;
-    
-    //encontra a posição de inserção
-    while (x != NULL) {
+
+    // encontra a posição de inserção
+    while (x != NULL)
+    {
         y = x;
-        if (novoNo->idCliente < x->idCliente) {
+        if (novoNo->idCliente < x->idCliente)
+        {
             x = x->esq;
-        } else {
+        }
+        else
+        {
             x = x->dir;
         }
     }
-    
+
     novoNo->pai = y;
-    
-    if (y == NULL) {
-        arvore->raiz = novoNo;//árvore vazia
-    } else if (novoNo->idCliente < y->idCliente) {
+
+    if (y == NULL)
+    {
+        arvore->raiz = novoNo; // árvore vazia
+    }
+    else if (novoNo->idCliente < y->idCliente)
+    {
         y->esq = novoNo;
-    } else {
+    }
+    else
+    {
         y->dir = novoNo;
     }
-    
-    //ajusta as propriedades da ARN
+
+    // ajusta as propriedades da ARN
     ajustarInsercao(novoNo, arvore);
-    
-    //encontra a nova raiz
-    while (arvore->raiz->pai != NULL) {
+
+    // encontra a nova raiz
+    while (arvore->raiz->pai != NULL)
+    {
         arvore->raiz = arvore->raiz->pai;
     }
-    
+
     return true;
 }
 
-//função para imprimir em pré-ordem (como ela pediu no trabalho)
-void imprimirPreOrdem(NoRn *no) {
-    if (no != NULL) {
+// função para imprimir em pré-ordem (como ela pediu no trabalho)
+void imprimirPreOrdem(NoRn *no)
+{
+    if (no != NULL)
+    {
         printf("%d %s\n", no->idCliente, no->cor == RED ? "RED" : "BLACK");
         imprimirPreOrdem(no->esq);
         imprimirPreOrdem(no->dir);
@@ -222,8 +247,8 @@ ArvoreRn *criaArvore()
     return aux;
 }
 
-
-int main() {
+int main()
+{
     // teste arvore mock OK
     ArvoreRn *arvoreRn = criaArvore();
     arvoreRn->raiz = criaNoRn(12);
