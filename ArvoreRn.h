@@ -2,37 +2,84 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-//java na veia
-typedef enum {
+// java na veia
+typedef enum
+{
     BLACK,
     RED,
-    DOUBLEBLACK,
 } Cor;
 
-typedef struct NoRn{
+typedef struct NoRn
+{
     int idCliente;
     Cor cor;
     struct NoRn *esq;
     struct NoRn *dir;
     struct NoRn *pai;
-}NoRn;
+} NoRn;
 
-typedef struct ArvoreRn{
-    NoRn * raiz;
-}ArvoreRn;
+typedef struct ArvoreRn
+{
+    NoRn *raiz;
+} ArvoreRn;
 
-typedef struct FilaAtendimento{
+typedef struct FilaAtendimento
+{
     int *vetor;
     int totalAtendimentos;
-}FilaAtendimento;
+} FilaAtendimento;
 
+// cabeçalhos das funcoes e comentarios
 
-//cabeçalhos das funcoes e comentarios
+NoRn *criaNoRn(int idCliente);
 
+ArvoreRn *criaArvore();
+
+FilaAtendimento *criaFila();
+
+NoRn *menorNo(ArvoreRn *grafo);
+
+NoRn *antecessor(ArvoreRn *grafo, NoRn *No);
 
 NoRn *buscaNo(int idCliente, NoRn *raiz);
 
+bool RR(ArvoreRn *grafo, NoRn *no);
 
+bool LL(ArvoreRn *grafo, NoRn *no);
 
-void removerNoRn(int idCliente, NoRn *raiz);
+void RL(ArvoreRn *grafo, NoRn *no);
 
+void LR(ArvoreRn *grafo, NoRn *no);
+
+void TransplanteRn(ArvoreRn *grafo, NoRn *u, NoRn *z);
+
+/*
+@brief aplica os 4 casos e seus respectivos subcasos
+@param arvore: arvore rubro negra
+@param x: no usado na remocao
+
+*/
+void CorrigirRemocaoRn(ArvoreRn *arvore, NoRn *x);
+/*
+@brief realiza a remocao de um no e uma arvore nao nula
+@param grafo: arvore rubro negra
+@param idCliente: numero de registro do cliente
+
+*/
+bool RemoverNoRn(ArvoreRn *grafo, int idCliente);
+
+/*
+@brief aplica os 3 casos de balanceamento
+@param novoNo: no usado na insercao
+@param arvore: arvore rubro negra
+
+*/
+bool ajustarInsercao(NoRn *novoNo, ArvoreRn *arvore);
+
+/*
+@brief insere um novo NoRn na arvore
+@param idCLiente: numero de registro do cliente
+@param arvore: arvore rubro negra
+
+*/
+bool inserirNo(int idCliente, ArvoreRn *arvore);

@@ -120,40 +120,48 @@ bool clienteNaFila(int idCliente, NoRn *raiz)
 // anisio
 bool ajustarInsercao(NoRn *novoNo, ArvoreRn *arvore)
 {
-    NoRn *tio = NULL;
-
-    while (novoNo->pai->cor == RED)
+    if (arvore->raiz == NULL)
     {
+        return false;
+    }
+
+    if (novoNo->idCliente == arvore->raiz->idCliente)
+    {
+        arvore->raiz->cor = BLACK;
+        return true;
+    }
+
+    NoRn *tio = NULL;
+    while (novoNo->pai != NULL && novoNo->pai->cor == RED && novoNo != arvore->raiz)
+    {
+        if (novoNo->pai->pai == NULL)
+        {
+            break; // Avô não existe, não podemos continuar
+        }
         if (novoNo->pai == novoNo->pai->pai->esq)
         {
             tio = novoNo->pai->pai->dir;
 
-            if (tio->cor == RED)
+            if (tio != NULL && tio->cor == RED)
             {
                 // caso 1:tio vermelho Ok
-                printf("caso1");
                 novoNo->pai->cor = BLACK;
                 tio->cor = BLACK;
                 novoNo->pai->pai->cor = RED;
                 novoNo = novoNo->pai->pai;
-                return true;
             }
             else
             {
                 // caso 2:tio preto
                 if (novoNo == novoNo->pai->dir)
                 {
-                    printf("MAMACO");
                     novoNo = novoNo->pai;
                     LL(arvore, novoNo);
-                    return true;
                 }
                 // caso 3 OK
-                printf("caso3");
                 novoNo->pai->cor = BLACK;
                 novoNo->pai->pai->cor = RED;
                 RR(arvore, novoNo->pai->pai);
-                return true;
             }
         }
         else
@@ -161,7 +169,7 @@ bool ajustarInsercao(NoRn *novoNo, ArvoreRn *arvore)
             // espelho dos casos anteriores
             tio = novoNo->pai->pai->esq;
 
-            if (tio->cor == RED)
+            if (tio != NULL && tio->cor == RED)
             {
                 novoNo->pai->cor = BLACK;
                 tio->cor = BLACK;
@@ -181,8 +189,9 @@ bool ajustarInsercao(NoRn *novoNo, ArvoreRn *arvore)
             }
         }
     }
-
-    arvore->raiz->cor = BLACK; // a raiz é sempre preta (se por acaso ela ficar vermelha é pra mudar a cor dos filhos)
+    // a raiz é sempre preta (se por acaso ela ficar vermelha é pra mudar a cor dos filhos)
+    arvore->raiz->cor = BLACK;
+    return true;
 }
 
 // função de inserção
@@ -193,7 +202,6 @@ bool inserirNo(int idCliente, ArvoreRn *arvore)
         return false;
     NoRn *y = NULL;
     NoRn *x = arvore->raiz;
-
     // encontra a posição de inserção
     while (x != NULL)
     {
@@ -207,9 +215,7 @@ bool inserirNo(int idCliente, ArvoreRn *arvore)
             x = x->dir;
         }
     }
-
     novoNo->pai = y;
-
     if (y == NULL)
     {
         arvore->raiz = novoNo; // árvore vazia
@@ -222,10 +228,8 @@ bool inserirNo(int idCliente, ArvoreRn *arvore)
     {
         y->dir = novoNo;
     }
-
     // ajusta as propriedades da ARN
     ajustarInsercao(novoNo, arvore);
-
     // encontra a nova raiz
     while (arvore->raiz->pai != NULL)
     {
@@ -236,7 +240,7 @@ bool inserirNo(int idCliente, ArvoreRn *arvore)
 }
 
 // função para imprimir em pré-ordem (como ela pediu no trabalho)
-void imprimirPreOrdem(NoRn *no)
+void imprimirPreOrdem(NoRn *no) // funcao errada
 {
     if (no != NULL)
     {
@@ -255,54 +259,19 @@ ArvoreRn *criaArvore()
 
 int main()
 {
-    // teste arvore mock OK
     ArvoreRn *arvoreRn = criaArvore();
-    arvoreRn->raiz = criaNoRn(12);
-    arvoreRn->raiz->cor = BLACK;
+    inserirNo(12, arvoreRn);
 
-    arvoreRn->raiz->esq = criaNoRn(6);
-    arvoreRn->raiz->esq->cor = RED;
-    arvoreRn->raiz->esq->pai = arvoreRn->raiz; // Ponteiro para o pai
-    arvoreRn->raiz->dir = criaNoRn(18);
-    arvoreRn->raiz->dir->cor = BLACK;
-    arvoreRn->raiz->dir->pai = arvoreRn->raiz; // Ponteiro para o pai
+    inserirNo(5, arvoreRn);
+    inserirNo(56, arvoreRn);
+    inserirNo(20, arvoreRn);
+    inserirNo(1, arvoreRn);
+    inserirNo(57, arvoreRn);
+    inserirNo(2, arvoreRn);
 
-    arvoreRn->raiz->esq->esq = criaNoRn(3);
-    arvoreRn->raiz->esq->esq->cor = BLACK;
-    arvoreRn->raiz->esq->esq->pai = arvoreRn->raiz->esq; // Ponteiro para o pai
-    arvoreRn->raiz->esq->dir = criaNoRn(8);
-    arvoreRn->raiz->esq->dir->cor = BLACK;
-    arvoreRn->raiz->esq->dir->pai = arvoreRn->raiz->esq; // Ponteiro para o pai
-
-    arvoreRn->raiz->esq->esq->esq = criaNoRn(2);
-    arvoreRn->raiz->esq->esq->esq->cor = RED;
-    arvoreRn->raiz->esq->esq->esq->pai = arvoreRn->raiz->esq->esq; // Ponteiro para o pai
-
-    arvoreRn->raiz->esq->esq->dir = criaNoRn(5);
-    arvoreRn->raiz->esq->esq->dir->cor = RED;
-    arvoreRn->raiz->esq->esq->dir->pai = arvoreRn->raiz->esq->esq; // Ponteiro para o pai
-
-    // arvoreRn->raiz->dir->dir = criaNoRn(20);
-    // arvoreRn->raiz->dir->dir->cor = RED;
-    // arvoreRn->raiz->dir->dir->pai = arvoreRn->raiz->dir; // Ponteiro para o pai
-
-    arvoreRn->raiz->dir->esq = criaNoRn(15);
-    arvoreRn->raiz->dir->esq->cor = RED;
-    arvoreRn->raiz->dir->esq->pai = arvoreRn->raiz->dir; // Ponteiro para o pai
-
-    // arvoreRn->raiz->esq->esq->dir->esq = criaNoRn(4);
-    inserirNo(4, arvoreRn);
-
-    printf("RAIZ: %d\n", arvoreRn->raiz->idCliente);
-
-    inserirNo(19, arvoreRn);
-
-    //  printf("RAIZ: %d",arvoreRn->raiz->idCliente);
-    //  inserirNo(20,arvoreRn);
+    printf("cor: %d\n", arvoreRn->raiz->cor);
 
     imprimirPreOrdem(arvoreRn->raiz);
-
-    //ARRUMAR INSERCAO (NA RAIZ E CASO 2,3)
 
     return 0;
 }
