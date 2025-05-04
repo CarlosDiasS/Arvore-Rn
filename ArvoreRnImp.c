@@ -1,5 +1,7 @@
 #include "ArvoreRn.h"
 
+#define MAX 1000
+
 NoRn *criaNoRn(int idCliente)
 {
     NoRn *aux = malloc(sizeof(NoRn));
@@ -23,6 +25,7 @@ FilaAtendimento *criaFila()
 {
     FilaAtendimento *aux = malloc(sizeof(FilaAtendimento));
     aux->totalAtendimentos = 0;
+    aux->vetor = NULL;
     return aux;
 }
 
@@ -78,12 +81,13 @@ bool RR(ArvoreRn *grafo, NoRn *no)
     }
     aux->dir = no;
     no->pai = aux;
+    return true;
 }
 
 bool LL(ArvoreRn *grafo, NoRn *no)
 {
 
-    if (no == NULL || no->esq == NULL || grafo->raiz == NULL)
+    if (no == NULL || no->dir == NULL || grafo->raiz == NULL)
         return false;
 
     NoRn *aux = no->dir;
@@ -110,6 +114,7 @@ bool LL(ArvoreRn *grafo, NoRn *no)
     }
     aux->esq = no;
     no->pai = aux;
+    return true;
 }
 
 void RL(ArvoreRn *grafo, NoRn *no)
@@ -124,18 +129,13 @@ void LR(ArvoreRn *grafo, NoRn *no)
     RR(grafo, no);
 }
 
-NoRn *menorNo(ArvoreRn *grafo)
+NoRn *menorNo(NoRn *no)
 {
-
-    NoRn *aux = grafo->raiz;
-    if (aux != NULL)
+    while (no != NULL && no->esq != NULL)
     {
-        while (aux->esq != NULL)
-        {
-            aux = aux->esq;
-        }
-        return aux;
+        no = no->esq;
     }
+    return no;
 }
 
 NoRn *antecessor(ArvoreRn *grafo, NoRn *No)
@@ -278,7 +278,7 @@ bool RemoverNoRn(ArvoreRn *grafo, int idCliente)
 {
 
     NoRn *aux = buscaNo(idCliente, grafo->raiz);
-    if (aux == NULL || grafo == NULL || grafo->raiz == NULL)
+    if (aux == NULL)
     {
         return false;
     }
@@ -322,8 +322,8 @@ bool RemoverNoRn(ArvoreRn *grafo, int idCliente)
         NoRn *temp = aux->dir;
         aux = aux->dir;
         aux->cor = temp->cor;
-        free(aux->dir);
         aux->dir = NULL;
+        free(aux->dir);
         return true;
     }
 
@@ -334,8 +334,8 @@ bool RemoverNoRn(ArvoreRn *grafo, int idCliente)
         NoRn *temp = aux->esq;
         aux = aux->esq;
         aux->cor = temp->cor;
-        free(aux->esq);
         aux->esq = NULL;
+        free(aux->esq);
         return true;
     }
 
@@ -373,81 +373,163 @@ bool RemoverNoRn(ArvoreRn *grafo, int idCliente)
     return true;
 }
 
-// FUNÇAÕ INSERÇÃO
-// FUNÇÃO REMOÇAO ok
-// FUNCAO PRINT (ALTERAR COR DE EXIBICAO: R/N)
-// grafico em log N (relatorio)
-
-/*
-    a fila de atendimento ira armazenar os inputs
-    caso seja -1, chamar a remocao(que ira remover o idCliente de menor valor)
-    demais valores serao adicionado a arvore
-    ao final, a funcao impressao ira imprimir a arvore resultante(que contem os clientes que ainda nao foram atendidos)
-
-    -> uma funcao handleInput da vida, que ira analisar as entradas(x1,x2,x3...):
-
-    while fim dos inputs
-
-    x = -1: remover no com menor idCliente(naturalmente, no na extrema esquerda da arvore)
-    x >= 0: adicionar a arvore Rn
-
-    -> imprimir arvore resultante no formato:
-
-    41 BLACK
-    34 RED
-    25 BLACK
-    32 RED
-    36 BLACK
-    43 BLACK
-    49 RED
-
-    -> funcao para limpar todas as alocações de memoria
-
-*/
-
-void imprimirGrafo(ArvoreRn *grafo){
-    printf("teste");
+void imprimirPreOrdem(NoRn *no)
+{
+    if (no != NULL)
+    {
+        printf("%d %s\n", no->idCliente, no->cor == RED ? "RED" : "BLACK");
+        imprimirPreOrdem(no->esq);
+        imprimirPreOrdem(no->dir);
+    }
 }
 
-bool inserirNoRn(int idCliente, ArvoreRn *grafo){
-    return false;
+void ajustarInsercao(ArvoreRn *arvore, NoRn *novoNo)
+{
+    while (novoNo != arvore->raiz && novoNo->pai->cor == RED)
+    {
+        if (novoNo->pai == novoNo->pai->pai->esq)
+        {
+            NoRn *tio = novoNo->pai->pai->dir;
+
+            if (tio != NULL && tio->cor == RED)
+            {
+                // Caso 1: Tio vermelho
+                novoNo->pai->cor = BLACK;
+                tio->cor = BLACK;
+                novoNo->pai->pai->cor = RED;
+                novoNo = novoNo->pai->pai;
+            }
+            else
+            {
+                // Caso 2: Tio preto e nó é filho direito
+                if (novoNo == novoNo->pai->dir)
+                {
+                    novoNo = novoNo->pai;
+                    LL(arvore, novoNo);
+                }
+                // Caso 3: Tio preto e nó é filho esquerdo
+                novoNo->pai->cor = BLACK;
+                novoNo->pai->pai->cor = RED;
+                RR(arvore, novoNo->pai->pai);
+            }
+        }
+        else
+        {
+            // Caso simétrico
+            NoRn *tio = novoNo->pai->pai->esq;
+
+            if (tio != NULL && tio->cor == RED)
+            {
+                novoNo->pai->cor = BLACK;
+                tio->cor = BLACK;
+                novoNo->pai->pai->cor = RED;
+                novoNo = novoNo->pai->pai;
+            }
+            else
+            {
+                if (novoNo == novoNo->pai->esq)
+                {
+                    novoNo = novoNo->pai;
+                    RR(arvore, novoNo);
+                }
+                novoNo->pai->cor = BLACK;
+                novoNo->pai->pai->cor = RED;
+                LL(arvore, novoNo->pai->pai);
+            }
+        }
+    }
+    arvore->raiz->cor = BLACK;
+}
+
+void inserirNo(int idCliente, ArvoreRn *arvore)
+{
+    NoRn *novoNo = criaNoRn(idCliente);
+    if (novoNo == NULL)
+        return;
+
+    NoRn *y = NULL;
+    NoRn *x = arvore->raiz;
+
+    // Encontra a posição de inserção
+    while (x != NULL)
+    {
+        y = x;
+        if (idCliente < x->idCliente)
+        {
+            x = x->esq;
+        }
+        else
+        {
+            x = x->dir;
+        }
+    }
+
+    novoNo->pai = y;
+
+    if (y == NULL)
+    {
+        arvore->raiz = novoNo;
+    }
+    else if (idCliente < y->idCliente)
+    {
+        y->esq = novoNo;
+    }
+    else
+    {
+        y->dir = novoNo;
+    }
+
+    ajustarInsercao(arvore, novoNo);
 }
 
 ArvoreRn *tratarInputDados(FilaAtendimento *fila)
 {
-
-    int totalEntradas = sizeof(fila->vetor) / sizeof(int); // ou entao receber por parametro
-    fila->totalAtendimentos = totalEntradas;
     ArvoreRn *grafo = criaArvore();
 
-    for (int i = 0; i < totalEntradas; i++)
+    for (int i = 0; i < fila->totalAtendimentos; i++)
     {
 
         if (fila->vetor[i] != -1)
         {
-            inserirNoRn(fila->vetor[i], grafo);
-            // testar com printf aqui
+            inserirNo(fila->vetor[i], grafo);
+            printf("ins: %d\n", fila->vetor[i]);
         }
         else
         {
-            RemoverNoRn(grafo,fila->vetor[i]);
-            // testar com printf aqui
+            NoRn *aux = menorNo(grafo->raiz);
+            printf("rem: %d\n", aux->idCliente);
+            RemoverNoRn(grafo, aux->idCliente);
         }
     }
     return grafo;
 }
 
+void insercaoNaFila(FilaAtendimento *fila)
+{
+
+    fila->vetor = malloc(sizeof(int) * MAX);
+    int aux = 0;
+    while (scanf("%d", &aux) == 1)
+    {
+        fila->vetor[fila->totalAtendimentos] = aux;
+        fila->totalAtendimentos++;
+    }
+}
+
 int main()
 {
-    // main ofc:
 
-    // input e tratamento de dados
+    // clock
+    //  input e tratamento de dados
     FilaAtendimento *fila = criaFila();
 
-    // um for para popular a fila(scanf)
+    // popular a fila
+    insercaoNaFila(fila);
 
+    // tratar insercoes na fila
     ArvoreRn *grafo = tratarInputDados(fila);
-    imprimirGrafo(grafo);
 
+    // impressao
+    imprimirPreOrdem(grafo->raiz);
     return 0;
 }

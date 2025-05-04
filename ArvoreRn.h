@@ -37,7 +37,7 @@ ArvoreRn *criaArvore();
 
 FilaAtendimento *criaFila();
 
-NoRn *menorNo(ArvoreRn *grafo);
+NoRn *menorNo(NoRn *no);
 
 NoRn *antecessor(ArvoreRn *grafo, NoRn *No);
 
@@ -74,7 +74,7 @@ bool RemoverNoRn(ArvoreRn *grafo, int idCliente);
 @param arvore: arvore rubro negra
 
 */
-bool ajustarInsercao(NoRn *novoNo, ArvoreRn *arvore);
+void ajustarInsercao(ArvoreRn *arvore, NoRn *novoNo);
 
 /*
 @brief insere um novo NoRn na arvore
@@ -82,4 +82,4 @@ bool ajustarInsercao(NoRn *novoNo, ArvoreRn *arvore);
 @param arvore: arvore rubro negra
 
 */
-bool inserirNo(int idCliente, ArvoreRn *arvore);
+void inserirNo(int idCliente, ArvoreRn *arvore);
