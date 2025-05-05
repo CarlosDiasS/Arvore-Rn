@@ -83,3 +83,7 @@ void ajustarInsercao(ArvoreRn *arvore, NoRn *novoNo);
 
 */
 void inserirNo(int idCliente, ArvoreRn *arvore);
+
+void insercaoNaFila(FilaAtendimento *fila);
+
+ArvoreRn *tratarInputDados(FilaAtendimento *fila);
